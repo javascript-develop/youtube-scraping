@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
-const database = () =>{
+const database = () => {
 
-const uri = `mongodb+srv://rubel:k!r9qnFujyBvs!fr@cluster0.iy8np2n.mongodb.net/?retryWrites=true&w=majority`
+      const uri = "mongodb+srv://testdb:k!r9qnFujyBvs!f@cluster0.cywshen.mongodb.net/?retryWrites=true&w=majority"
 
-mongoose.connect(uri , { useNewUrlParser: true, useUnifiedTopology: true })
-.then((data) => {
-      console.log("mongoose was cannect");
-})
-.catch((error) =>{
-      console.log("this is error",error)
-})
+      mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then((data) => {
+                  console.log("mongoose was cannect");
+            })
+            .catch((error) => {
+                  console.log("this is error", error)
+            })
 }
 module.exports = database

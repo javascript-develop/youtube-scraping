@@ -2,11 +2,11 @@ const express = require("express");
 const app = express();
 const paypal = require('paypal-rest-sdk');
 const cors = require("cors");
-// app.use(
-//   cors({
-//     origin: "https://golf-b0226.web.app",
-//   })
-// );
+app.use(
+  cors({
+    origin: "https://golf-b0226.web.app",
+  })
+);
 app.use(cors());
 // const cookieParser = require('cookie-parser')....
 const fileUpload = require("express-fileupload");
