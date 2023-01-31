@@ -4,7 +4,7 @@ const paypal = require('paypal-rest-sdk');
 const cors = require("cors");
 app.use(
   cors({
-    origin: "https://golf-b0226.web.app",
+    origin: "http://localhost:3000",
   })
 );
 app.use(cors());
