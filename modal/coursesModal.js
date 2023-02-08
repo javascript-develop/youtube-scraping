@@ -33,11 +33,11 @@ const courcesShema = new mongoose.Schema({
     {
       public_id: {
         type: String,
-        // required: true,
+        required: true,
       },
       url: {
         type: String,
-        // required: true,
+        required: true,
       },
     },
   ],
@@ -65,11 +65,11 @@ const courcesShema = new mongoose.Schema({
   },
   lat: {
     type: Number,
-    required: [false, "Please Enter course location"],
+    // required: [false, "Please Enter course location"],
   },
   log: {
     type: Number,
-    required: [false, "Please Enter course location"],
+    // required: [false, "Please Enter course location"],
   },
 
   boxOneImage: {
