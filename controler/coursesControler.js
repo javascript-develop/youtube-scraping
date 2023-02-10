@@ -6,11 +6,15 @@ const Discount = require("../modal/Discount");
 
 exports.createCourse = async (req, res, next) => {
   try {
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
-      folder: "products",
-      // width: 150,
-      crop: "scale",
-    });
+    if (req.body.images !== ""){
+      var myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
+        folder: "products",
+        // width: 150,
+        crop: "scale",
+      });
+    }
+    
+  
 
     if (req.body.boxOneImage !== "") {
       var CloudboxOneImage = await cloudinary.v2.uploader.upload(
@@ -71,15 +75,15 @@ exports.createCourse = async (req, res, next) => {
       about,
       goal,
       mission,
-      log,
-      lat,
+      log: req?.body?.log == "NaN" ? 0 : log,
+      lat: req.body.lat == "NaN" ? 0 : lat,
       price,
       boxOneTitle,
       boxTwoTitle,
       boxThreeTitle,
       images: {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
+        public_id: myCloud?.public_id,
+        url: myCloud?.secure_url,
       },
       boxOneImage: {
         public_id: CloudboxOneImage?.public_id,
