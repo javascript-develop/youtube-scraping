@@ -209,6 +209,31 @@ exports.deleteCourse = async (req, res, next) => {
   }
 };
 
+exports.generateDeleteCuponCode = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    let discountcode = await Discount.findById(id);
+    console.log(discountcode);
+    if (!discountcode) {
+      res.status(500).send({
+        success: false,
+        message: "Course Not found",
+      });
+    }
+    else {
+      await discountcode.remove();
+      res.status(200).send({
+        success: true,
+        message: "Course Delete Successfull",
+      });
+    }
+  }
+
+  catch (e) {
+
+  }
+};
+
 exports.getCourseDetels = async (req, res, next) => {
   const id = req.params.id;
   const course = await CoursesDB.findById(id);
