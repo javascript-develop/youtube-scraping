@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const database = () => {
 
-      const uri = "mongodb+srv://rubel:k!r9qnFujyBvs!frs@cluster0.iy8np2n.mongodb.net/?retryWrites=true&w=majority"
+      const uri = "mongodb+srv://rubel:k!r9qnFujyBvs!frsgolf@cluster0.iy8np2n.mongodb.net/?retryWrites=true&w=majority"
 
       mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
             .then((data) => {
