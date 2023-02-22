@@ -273,12 +273,13 @@ exports.getAllPromoCode = async (req, res, next) => {
 }
 exports.generateCuponCode = async (req, res, next) => {
   console.log(req.body)
-  const { amount, expiresAt, usageLimit } = req.body;
+  const { amount, code, expiresAt, usageLimit } = req.body;
+  console.log(code)
   // generate discount code logic
   console.log(amount, expiresAt)
-  const discountCode = generateDiscountCode(amount);
+  // const discountCode = generateDiscountCode(amount);
   // save discount code to database
-  const { code } = discountCode
+  // const { code } = discountCode
   const saveDiscountCode = { code, expiresAt, amount, usageLimit }
   console.log(saveDiscountCode)
   saveDiscountCodeToDb(saveDiscountCode);
