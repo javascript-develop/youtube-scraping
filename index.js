@@ -20,7 +20,10 @@ cloudinary.config({
       'client_secret': 'EMUKO8K2HFgc8Ay7bnHOlm8n5IK66nDOboVXXlTdU9i7jAFO8mOdwD4jfwNyDYUq2akBSDXxHYHkCmg2'
     });
 
+
 //     paypal configartion 
+// send mail msg notificatio
+
 
 // surver run 
 app.listen(port , ()=>{
