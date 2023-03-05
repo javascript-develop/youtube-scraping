@@ -133,7 +133,8 @@ exports.getAllCourse = async (req, res, next) => {
   }
 };
 
-exports.updateCourser = async (req, res, next) => {
+// old update controler route 
+/* exports.updateCourser = async (req, res, next) => {
   const id = req.params.id;
   let course = await CoursesDB.findById(id);
   if (!course) {
@@ -153,7 +154,99 @@ exports.updateCourser = async (req, res, next) => {
     success: true,
     course,
   });
+}; */
+
+
+// new update controler route 
+exports.updateCourser = async (req, res, next) => {
+  try {
+    const {
+      name,
+      description,
+      email,
+      category,
+      courseTitle,
+      Stock,
+      about,
+      goal,
+      price,
+      mission,
+      log,
+      lat,
+      images,
+      boxOneTitle,
+      boxTwoTitle,
+      boxThreeTitle,
+      boxOneImage,
+      boxTwoImage,
+      boxThreeImage
+    } = req.body;
+   
+    const id = req.params.id;
+    let course = await CoursesDB.findById(id);
+  
+    if (!course) {
+      res.status(500).json({
+        success: false,
+        message: "Course Not found",
+      });
+    }
+
+    course = await CoursesDB.findByIdAndUpdate(
+      id,
+
+      {
+        name,
+        description,
+        email,
+        category,
+        courseTitle,
+        Stock,
+        about,
+        goal,
+        price,
+        mission,
+        log,
+        lat,
+        images: {
+          url: images
+        },
+        boxOneTitle,
+        boxTwoTitle,
+        boxThreeTitle,
+        boxOneImage: {
+          url: boxOneImage
+        },
+        boxTwoImage: {
+          url: boxTwoImage
+        },
+        boxThreeImage: {
+          url: boxThreeImage
+        }
+      }
+  
+      ,
+      {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      }
+
+    );
+
+
+
+    res.status(200).json({
+      success: true,
+      course,
+    });
+  }
+  catch (e) {
+    console.log(e);
+  }
+
 };
+
 exports.validatePromo = async (req, res, next) => {
   const { code, } = req.params;
 

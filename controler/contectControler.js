@@ -1,23 +1,47 @@
 const ContectDB = require("../modal/contectModal");
 
+const nodemailer = require("nodemailer");
+
 exports.createContect = async (req, res, next) => {
   try {
     const { name, phone, email, subject, message } = req.body;
-    const sendProudcts = await ContectDB.create({
+    await ContectDB.create({
       name,
       phone,
       email,
       subject,
       message,
     });
+
+    // send email
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user:"rubelrana019914@gmail.com",
+        pass: "groufyzbteehyfes",
+      },
+    });
+
+    const mailOptions = {
+      from: "your-gmail-username",
+      to: "rubelrana019914@gmail.com",
+      subject: "New message from website",
+      text: `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
     res.status(200).json({
       success: true,
-      message: "Message Send Successfull",
+      message: "Message Send Successfully",
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
   }
 };
+
 
 exports.getAllContectList = async (req, res, next) => {
   try {
