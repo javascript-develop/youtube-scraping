@@ -5,7 +5,7 @@ const cors = require("cors");
 const sgMail = require('@sendgrid/mail');
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://michigansbestgolfdeals.com",
   })
 );
 app.use(cors());
@@ -42,8 +42,8 @@ app.post("/pay", (req, res) => {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "/myCart/chackout/review/payment/success",
-      cancel_url: "/cancel",
+      return_url: "https://michigansbestgolfdeals.com/myCart/chackout/review/payment/success",
+      cancel_url: "https://michigansbestgolfdeals.com/cancel",
     },
     transactions: [
       {
