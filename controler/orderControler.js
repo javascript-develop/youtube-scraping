@@ -9,6 +9,7 @@ exports.newOrder = async (req, res, next) => {
   try {
  
     const { shippingInfo, orderItems } = req.body;
+    console.log(req.body)
     const { quantity , id } = orderItems;
     const { name, email } = shippingInfo;
 
