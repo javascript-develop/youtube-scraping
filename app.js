@@ -24,7 +24,7 @@ const courseRouter = require("./router/courses");
 const orderRouter = require("./router/order");
 const errorHandeler = require("./utilities/errorHendeler");
 const contectHandeler = require("./router/contect");
-const subscribeModal = require("./modal/subscribemodal");
+const subscribeModal = require("./modal/subscribeModal");
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/order", orderRouter);
