@@ -134,27 +134,27 @@ exports.getAllCourse = async (req, res, next) => {
 };
 
 // old update controler route 
-/* exports.updateCourser = async (req, res, next) => {
-  const id = req.params.id;
-  let course = await CoursesDB.findById(id);
-  if (!course) {
-    res.status(500).json({
-      success: false,
-      message: "Course Not found",
-    });
-  }
+//  exports.updateCourser = async (req, res, next) => {
+//   const id = req.params.id;
+//   let course = await CoursesDB.findById(id);
+//   if (!course) {
+//     res.status(500).json({
+//       success: false,
+//       message: "Course Not found",
+//     });
+//   }
 
-  course = await CoursesDB.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true,
-    useFindAndModify: false,
-  });
+//   course = await CoursesDB.findByIdAndUpdate(id, req.body, {
+//     new: true,
+//     runValidators: true,
+//     useFindAndModify: false,
+//   });
 
-  res.status(200).json({
-    success: true,
-    course,
-  });
-}; */
+//   res.status(200).json({
+//     success: true,
+//     course,
+//   });
+// };
 
 
 // new update controler route 
