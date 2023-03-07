@@ -97,6 +97,7 @@ exports.createCourse = async (req, res, next) => {
         public_id: CloudboxThreeImage?.public_id,
         url: CloudboxThreeImage?.secure_url,
       },
+      count: 0
     });
     res.status(200).json({
       message: "Course Publish Successfull",
