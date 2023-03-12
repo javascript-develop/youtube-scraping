@@ -245,8 +245,8 @@ exports.updateCourser = async (req, res, next) => {
   catch (e) {
     console.log(e);
   }
-};
 
+};
 
 exports.validatePromo = async (req, res, next) => {
   const { code, } = req.params;

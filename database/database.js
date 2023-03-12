@@ -1,15 +1,16 @@
 const mongoose = require("mongoose");
 
 const database = () => {
+      const uri = process.env.database_uri;
 
-      const uri = "mongodb+srv://programmerrubel2018:VRLqJlZzHeWhdzlKrsss@cluster0.fiall5r.mongodb.net/?retryWrites=true&w=majority"
-
-      mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+      mongoose
+            .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
             .then((data) => {
-                  console.log("mongoose was cannect");
+                  console.log("mongoose was connected");
             })
             .catch((error) => {
-                  console.log("this is error", error)
-            })
-}
-module.exports = database
+                  console.log("this is error", error);
+            });
+};
+
+module.exports = database;
