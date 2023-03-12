@@ -5,7 +5,7 @@ const cors = require("cors");
 const sgMail = require('@sendgrid/mail');
 app.use(
   cors({
-    origin: "https://michigansbestgolfdeals.com",
+    origin: "https://golf-b0226.web.app",
   })
 );
 app.use(cors());
