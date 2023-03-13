@@ -9,7 +9,8 @@ const {
   generateCuponCode,
   getAllPromoCode,
   validatePromo,
-  generateDeleteCuponCode
+  generateDeleteCuponCode,
+  activeCourse
 } = require("../controler/coursesControler");
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.get("/course/getAllPromoCode", getAllPromoCode);
 router.get("/course/:id", getCourseDetels);
 router.put("/course/:id", updateCourser);
 router.delete("/course/:id", deleteCourse);
+router.put("/course/active/:id", activeCourse);
 router.get("/myCourses/:email", myActiveCourses);
 
 module.exports = router;

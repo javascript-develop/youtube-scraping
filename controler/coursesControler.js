@@ -1,21 +1,20 @@
 const CoursesDB = require("../modal/coursesModal");
 const cloudinary = require("cloudinary");
-const generateDiscountCode = require("../utilities/generateCuponCode");
 const saveDiscountCodeToDb = require("../utilities/saveDiscountCodeToDb");
 const Discount = require("../modal/Discount");
 
 exports.createCourse = async (req, res, next) => {
   try {
-    if (req.body.images !== ""){
+    console.log(req.body)
+    if (req.body.images !== "") {
+
       var myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
         folder: "products",
         // width: 150,
         crop: "scale",
       });
-    }
-    
-  
 
+    }
     if (req.body.boxOneImage !== "") {
       var CloudboxOneImage = await cloudinary.v2.uploader.upload(
         req.body.boxOneImage,
@@ -47,6 +46,7 @@ exports.createCourse = async (req, res, next) => {
       );
     }
 
+
     const {
       name,
       description,
@@ -56,10 +56,10 @@ exports.createCourse = async (req, res, next) => {
       Stock,
       about,
       goal,
+      price,
       mission,
       log,
       lat,
-      price,
       boxOneTitle,
       boxTwoTitle,
       boxThreeTitle,
@@ -70,6 +70,7 @@ exports.createCourse = async (req, res, next) => {
       description,
       email,
       category,
+      price,
       courseTitle,
       Stock,
       about,
@@ -77,7 +78,6 @@ exports.createCourse = async (req, res, next) => {
       mission,
       log: req?.body?.log == "NaN" ? 0 : log,
       lat: req.body.lat == "NaN" ? 0 : lat,
-      price,
       boxOneTitle,
       boxTwoTitle,
       boxThreeTitle,
@@ -97,16 +97,57 @@ exports.createCourse = async (req, res, next) => {
         public_id: CloudboxThreeImage?.public_id,
         url: CloudboxThreeImage?.secure_url,
       },
-      count: 0
     });
     res.status(200).json({
+      success: true,
       message: "Course Publish Successfull",
       product: sendProudcts,
     });
   } catch (e) {
     console.log(e);
+    res.send({ success: false, message: e.message })
+
   }
 };
+
+// active course controler 
+exports.activeCourse = async (req, res, next) => {
+  try {
+
+    const id = req.params.id;
+    let course = await CoursesDB.findById(id);
+    console.log(course)
+
+    if (!course) {
+      res.status(500).json({
+        success: false,
+        message: "Course Not found",
+      });
+    }
+
+    course = await CoursesDB.findByIdAndUpdate(
+      id, req.body,
+      {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      }
+
+    );
+
+    console.log(course)
+
+
+
+    res.status(200).json({
+      success: true,
+      course,
+    });
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
 
 exports.getAllCourse = async (req, res, next) => {
   try {
@@ -182,6 +223,8 @@ exports.updateCourser = async (req, res, next) => {
       boxTwoImage,
       boxThreeImage
     } = req.body;
+
+  console.log(req.body.lat == "NaN")
    
     const id = req.params.id;
     let course = await CoursesDB.findById(id);
@@ -207,8 +250,8 @@ exports.updateCourser = async (req, res, next) => {
         goal,
         price,
         mission,
-        log,
-        lat,
+        log: req.body.log == "NaN" ? "" : log,
+        lat:  req.body.lat == "NaN" ? "" : lat,
         images: {
           url: images
         },
@@ -216,13 +259,13 @@ exports.updateCourser = async (req, res, next) => {
         boxTwoTitle,
         boxThreeTitle,
         boxOneImage: {
-          url: boxOneImage
+          url: req.body.boxOneImage == "undefined" ? "": boxOneImage
         },
         boxTwoImage: {
-          url: boxTwoImage
+          url: req.body.boxTwoImage == "undefined" ? "": boxTwoImage
         },
         boxThreeImage: {
-          url: boxThreeImage
+          url: req.body.boxThreeImage == "undefined" ? "": boxThreeImage
         }
       }
   

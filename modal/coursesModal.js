@@ -12,7 +12,7 @@ const courcesShema = new mongoose.Schema({
   },
   price: {
     type: String,
-    required: [true, "Please Enter product Price"],
+    // required: [true, "Please Enter product Price"],
    
   },
   status:{
@@ -43,7 +43,7 @@ const courcesShema = new mongoose.Schema({
   ],
   category: {
     type: String,
-    required: [true, "Please Enter Product Category"],
+    // required: [true, "Please Enter Product Category"],
   },
   about: {
     type: String,
@@ -51,11 +51,11 @@ const courcesShema = new mongoose.Schema({
   },
   goal: {
     type: String,
-    required: [true, "Please Enter about"],
+    // required: [true, "Please Enter about"],
   },
   mission: {
     type: String,
-    required: [true, "Please Enter about"],
+    // required: [true, "Please Enter about"],
   },
   Stock: {
     type: Number,
