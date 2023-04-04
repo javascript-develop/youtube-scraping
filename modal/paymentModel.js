@@ -65,7 +65,6 @@ const paymentShema = new mongoose.Schema({
           productId: {
             type: mongoose.Schema.ObjectId,
             ref: "Courses",
-            required: true,
           },
           name: {
               type: String ,

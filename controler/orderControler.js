@@ -14,10 +14,10 @@ exports.newOrder = async (req, res, next) => {
     const { name, email } = shippingInfo;
 
     const order = await OrderDB.create({
-      productId: id,
+      productId: id || null,
       name,
       email,
-      limit: quantity,
+      limit: quantity || null,
     });
     res.status(200).json({
       success: true,

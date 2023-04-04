@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 
 app.use(
   cors({
-    origin: "https://golf-web-8bbbe.web.app",
+    origin: "https://michigansbestgolfdeals.com",
   })
 );
 app.use(cors());
@@ -30,108 +30,22 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/contect", contectHandeler);
-
-// paypal payment get way intergation
-// app.post("/pay", (req, res) => {
-
-//    const {price} = req.query
-
-//       console.log(price);
-//   const create_payment_json = {
-//     intent: "sale",
-//     payer: {
-//       payment_method: "paypal",
-//     },
-//     redirect_urls: {
-//       return_url: "/myCart/chackout/review/payment/success",
-//       cancel_url: "/cancel",
-//     },
-//     transactions: [
-//       {
-//         item_list: {
-//           items: [
-//             // {
-//             //   name: "Red Sox Hat",
-//             //   sku: "001",
-//             //   price: "25.00",
-//             //   currency: "USD",
-//             //   quantity: 1,
-//             // },
-//           ],
-//         },
-//         amount: {
-//           currency: "USD",
-//           total: price,
-//         },
-//         description: "Hat for the best team ever",
-//       },
-//     ],
-//   };
-//   app.get("/success", (req, res) => {
-//     const payerId = req.query.PayerID;
-//     const paymentId = req.query.paymentId;
-
-//     const execute_payment_json = {
-//       payer_id: payerId,
-//       transactions: [
-//         {
-//           amount: {
-//             currency: "USD",
-//             total: price,
-//           },
-//         },
-//       ],
-//     };
-
-//     paypal.payment.execute(
-//       paymentId,
-//       execute_payment_json,
-//       function (error, payment) {
-//         if (error) {
-//           console.log(error.response);
-//           throw error;
-//         } else {
-//           console.log(JSON.stringify(payment));
-//           res.send("Success");
-//         }
-//       }
-//     );
-//   });
-//   paypal.payment.create(create_payment_json, function (error, payment) {
-//     if (error) {
-//       throw error;
-//     } else {
-//       for (let i = 0; i < payment.links.length; i++) {
-//         if (payment.links[i].rel === "approval_url") {
-//           res.redirect(payment.links[i].href);
-//         }
-//       }
-//     }
-//   });
-// });
-
-// stripe payment get way intergation
-app.use(bodyParser.json());
-
-// stripe code
+// stripe 
+const stripe = require('stripe')('sk_test_51MhDfQGWhqeYCYoNZ8xeQC0biQgOTjxuY0qZYPYHT90xg8fdMnDtaaGTQFanbJjeGMAzDgDjKwp47b4tHCQaGLXd00aHyzRvNf');
 app.post('/pay', async (req, res) => {
-  try {
-    const { price } = req.query;
-
-    // Create a PaymentIntent with the specified amount and currency
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: price,
-      currency: 'USD'
+  const { amount, paymentMethodId } = req.body;
+  console.log(amount, "amount ok")
+  try {const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: "usd",
+      payment_method: paymentMethodId,
+      confirm: true,
     });
-
-    // Send a success response with the PaymentIntent client secret
-    res.status(200).json({ success: true, clientSecret: paymentIntent.client_secret });
+    res.status(200).json({ message: "Payment successful!" });
   } catch (error) {
-    // Send an error response with the error message
-    res.status(500).json({ success: false, error: error.message });
-  }
-  
-});
+    console.log(error);
+    res.status(500).json({ message: "Payment failed." });
+  }});
 app.get("/cancel", (req, res) => res.send("Cancelled"));
 
 // subs server code
