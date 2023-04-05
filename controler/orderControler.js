@@ -21,7 +21,7 @@ exports.newOrder = async (req, res, next) => {
     });
     res.status(200).json({
       success: true,
-      order,
+      order: order.toObject(),
     });
   } catch (error) {
     console.log(error);
