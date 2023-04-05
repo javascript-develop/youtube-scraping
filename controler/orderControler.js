@@ -17,7 +17,7 @@ exports.newOrder = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      order: order.toObject(),
+      order,
     });
   } catch (error) {
     console.log(error);
@@ -27,6 +27,7 @@ exports.newOrder = async (req, res, next) => {
     });
   }
 };
+
 // exports.postOrder = async (req, res, next) => {
 //   try {
 //     const { shippingInfo, orderItems } = req.body;
