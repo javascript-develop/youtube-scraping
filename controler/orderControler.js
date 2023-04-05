@@ -2,9 +2,6 @@ const OrderDB = require("../modal/orderModal");
 const Payment = require("../modal/paymentModel");
 const CourseDB = require("../modal/coursesModal");
 const User = require("../modal/userModal");
-const stripe = require("stripe")(
-  "sk_test_51L1nmNCGpaTt0RU81oq26j6Ta7gwb9pGlOOwxjeXAQgefsXMvmRxFUopKE2St6GDbDpxjUug0KxRyqzL6oKarPcR00lqLjh70r"
-);
 exports.newOrder = async (req, res, next) => {
   try {
     const { shippingInfo, orderItems } = req.body;
