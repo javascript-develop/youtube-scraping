@@ -31,12 +31,14 @@ app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/contect", contectHandeler);
 // stripe 
-const stripe = require('stripe')('sk_test_51MhDfQGWhqeYCYoNZ8xeQC0biQgOTjxuY0qZYPYHT90xg8fdMnDtaaGTQFanbJjeGMAzDgDjKwp47b4tHCQaGLXd00aHyzRvNf');
+const stripe = require('stripe')('sk_test_51M8nImIzNDPNWkV5o9evL2xavXquzW1SeEWTrEQJZMQHsBh7d8IFMfkBzHvZ2q8gcJXgOP4Eu76v5fyqnB3ady3H00MHKhAFbO');
 app.post('/pay', async (req, res) => {
   const { amount, paymentMethodId } = req.body;
-  console.log(amount, "amount ok")
-  try {const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
+  console.log(amount, "amount ok");
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100, // convert amount to cents
       currency: "usd",
       payment_method: paymentMethodId,
       confirm: true,
@@ -45,7 +47,9 @@ app.post('/pay', async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Payment failed." });
-  }});
+  }
+});
+
 app.get("/cancel", (req, res) => res.send("Cancelled"));
 
 // subs server code

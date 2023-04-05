@@ -65,7 +65,7 @@ const orderShema = new mongoose.Schema({
           productId: {
             type: mongoose.Schema.ObjectId,
             ref: "Courses",
-            required: true,
+            // required: true,
           },
           name: {
               type: String ,
@@ -77,7 +77,7 @@ const orderShema = new mongoose.Schema({
             },
             limit: {
               type: Number,
-              required: true,
+              // required: true,
             },
           
           // paidAt: {
