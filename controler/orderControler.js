@@ -9,10 +9,10 @@ exports.newOrder = async (req, res, next) => {
     const { name, email } = shippingInfo;
 
     const order = await OrderDB.create({
-      productId: id || null,
+      productId: id,
       name,
       email,
-      limit: quantity || null,
+      limit: quantity,
     });
 
     res.status(200).json({
@@ -27,6 +27,31 @@ exports.newOrder = async (req, res, next) => {
     });
   }
 };
+// exports.postOrder = async (req, res, next) => {
+//   try {
+//     const { shippingInfo, orderItems } = req.body;
+//     const { quantity, id } = orderItems;
+//     const { name, email } = shippingInfo;
+
+//     const order = await OrderDB.create({
+//       productId: id,
+//       name,
+//       email,
+//       limit: quantity,
+//     });
+
+//     res.status(200).json({
+//       success: true,
+//       order: order.toObject(),
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
 
 
 exports.getAllOrders = async (req, res, next) => {
@@ -242,21 +267,16 @@ exports.sellersLimitDeccress = async (req, res, next) => {
 // payment router
 exports.paymentHendler = async (req, res, next) => {
   try {
-   
     const {
       orderItems,
       shippingInfo,
-      // name,
-      // email,
-      // address,
-      // country,,
       paidPrice,
       emails,
     } = req.body;
-    const { id } = orderItems;
+    const { id } = orderItems[0] || {};
+
     const { name, email, address, country } = shippingInfo;
 
-    console.log(emails);
     const order = await Payment.create({
       productId: id,
       name,
@@ -265,28 +285,44 @@ exports.paymentHendler = async (req, res, next) => {
       country,
       paidPrice,
     });
+
     const makeAdmin = await User.updateOne(
-      { _id: emails },
+      { email: emails },
       {
         $set: { status: "PAID" },
       }
     );
-    console.log(req.body);
-    if (makeAdmin.modifiedCount > 0) {
-      res.status(200).json({
-        success: true,
-        order,
+
+    if (makeAdmin.n === 0) {
+      // No matching user was found
+      res.status(404).json({
+        success: false,
+        message: "User not found",
       });
-    } else {
+    } else if (makeAdmin.nModified === 0) {
+      // The user has already been updated
       res.status(400).json({
         success: false,
+        message: "User already updated",
+      });
+    } else {
+      // The user was successfully updated
+      res.status(200).json({
+        success: true,
         order,
       });
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
+
+
 exports.myOrder = async (req, res, next) => {
   try {
     const email = req.params.email;

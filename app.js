@@ -16,6 +16,9 @@ const fileUpload = require("express-fileupload");
 // app.use(cookieParser())
 app.use(express.json());
 
+// Use body-parser middleware to parse request bodies
+app.use(bodyParser.json());
+
 app.use(fileUpload());
 app.use(express.static("public"));
 
