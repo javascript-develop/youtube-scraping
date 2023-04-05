@@ -7,10 +7,8 @@ const stripe = require("stripe")(
 );
 exports.newOrder = async (req, res, next) => {
   try {
- 
     const { shippingInfo, orderItems } = req.body;
-    console.log(req.body)
-    const { quantity , id } = orderItems;
+    const { quantity, id } = orderItems;
     const { name, email } = shippingInfo;
 
     const order = await OrderDB.create({
@@ -19,14 +17,20 @@ exports.newOrder = async (req, res, next) => {
       email,
       limit: quantity || null,
     });
+
     res.status(200).json({
       success: true,
       order: order.toObject(),
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
 
 exports.getAllOrders = async (req, res, next) => {
   try {
