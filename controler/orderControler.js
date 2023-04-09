@@ -4,15 +4,13 @@ const CourseDB = require("../modal/coursesModal");
 const User = require("../modal/userModal");
 exports.newOrder = async (req, res, next) => {
   try {
-    const { shippingInfo, orderItems } = req.body;
-    const { quantity, id } = orderItems;
-    const { name, email } = shippingInfo;
+    const { productId, name, email, limit } = req.body;
 
     const order = await OrderDB.create({
-      productId: id,
+      productId,
       name,
       email,
-      limit: quantity,
+      limit,
     });
 
     res.status(200).json({
@@ -27,6 +25,7 @@ exports.newOrder = async (req, res, next) => {
     });
   }
 };
+
 
 // exports.postOrder = async (req, res, next) => {
 //   try {
