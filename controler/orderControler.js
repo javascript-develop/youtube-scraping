@@ -4,13 +4,15 @@ const CourseDB = require("../modal/coursesModal");
 const User = require("../modal/userModal");
 exports.newOrder = async (req, res, next) => {
   try {
-    const { productId, name, email, limit } = req.body;
+    const { shippingInfo, orderItems } = req.body;
+    const { quantity, id } = orderItems;
+    const { name, email } = shippingInfo;
 
     const order = await OrderDB.create({
-      productId,
+      productId: id,
       name,
       email,
-      limit,
+      limit: quantity,
     });
 
     res.status(200).json({
@@ -25,7 +27,6 @@ exports.newOrder = async (req, res, next) => {
     });
   }
 };
-
 
 // exports.postOrder = async (req, res, next) => {
 //   try {
@@ -54,6 +55,18 @@ exports.newOrder = async (req, res, next) => {
 // };
 
 
+// exports.getAllOrders = async (req, res, next) => {
+//   try {
+//     const order = await OrderDB.find({}).populate("user", "name email");
+//     res.status(200).json({
+//       success: true,
+//       order,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 exports.getAllOrders = async (req, res, next) => {
   try {
     const order = await OrderDB.find({}).populate("user", "name email");
@@ -63,6 +76,11 @@ exports.getAllOrders = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching orders",
+      error: error.message,
+    });
   }
 };
 
