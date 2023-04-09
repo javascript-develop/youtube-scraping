@@ -5,7 +5,8 @@ const router = express.Router()
 router.get("/allPayments", allPayments)
 router.get("/allsellesList/:id", allSellesOrderList)
 router.get("/allPaymentList/:id", allPaymentOrderList)
-router.post("/new"  , newOrder)
+router.post("/new", newOrder)
+router.post("/post", paymentHendler)
 // router.post("/post", postOrder)
 router.post("/limit/:id"  , sellersLimitDeccress)
 router.get("/" ,  getAllOrders)
@@ -17,7 +18,7 @@ router.get("/myPayment/:email",  myOrder)
 router.get("/myCourses/:email",  myCourses)
 router.post("/promo" , discountPromoCode)
 router.post("/create-payment-intent", paymentGetWay)
-router.post("/post", paymentHendler)
+
 
 
 
