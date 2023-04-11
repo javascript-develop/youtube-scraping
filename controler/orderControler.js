@@ -3,6 +3,7 @@ const Payment = require("../modal/paymentModel");
 const CourseDB = require("../modal/coursesModal");
 const User = require("../modal/userModal");
 exports.newOrder = async (req, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
   try {
     const { shippingInfo, orderItems } = req.body;
     const { quantity, id } = orderItems;
@@ -19,6 +20,9 @@ exports.newOrder = async (req, res, next) => {
       success: true,
       order,
     });
+
+    console.log('responseData:', responseData);
+    
   } catch (error) {
     console.log(error);
     res.status(500).json({
