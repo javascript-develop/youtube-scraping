@@ -105,8 +105,7 @@ const courcesShema = new mongoose.Schema({
   boxThreeTitle: {
     type: String,
   },
-
-  //     brand: {
+    //     brand: {
   //       type: String,
   //       required: true,
   //     },
