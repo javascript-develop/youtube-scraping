@@ -2,8 +2,10 @@ const OrderDB = require("../modal/orderModal");
 const Payment = require("../modal/paymentModel");
 const CourseDB = require("../modal/coursesModal");
 const User = require("../modal/userModal");
+
 exports.newOrder = async (req, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
+  
+res.setHeader('Content-Type', 'application/json')
   try {
     const { shippingInfo, orderItems } = req.body;
     const { quantity, id } = orderItems;
@@ -21,8 +23,6 @@ exports.newOrder = async (req, res, next) => {
       order,
     });
 
-    console.log('responseData:', responseData);
-    
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -31,6 +31,66 @@ exports.newOrder = async (req, res, next) => {
     });
   }
 };
+
+// payment router
+exports.paymentHendler = async (req, res, next) => {
+
+  res.setHeader('Content-Type', 'application/json')
+  try {
+    const {
+      orderItems,
+      shippingInfo,
+      paidPrice,
+      emails,
+    } = req.body;
+    const { id } = orderItems[0] || {};
+
+    const { name, email, address, country } = shippingInfo;
+
+    const order = await Payment.create({
+      productId: id,
+      name,
+      email,
+      address,
+      country,
+      paidPrice,
+    });
+
+    const makeAdmin = await User.updateOne(
+      { email: emails },
+      {
+        $set: { status: "PAID" },
+      }
+    );
+
+    if (makeAdmin.n === 0) {
+      // No matching user was found
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    } else if (makeAdmin.nModified === 0) {
+      // The user has already been updated
+      res.status(400).json({
+        success: false,
+        message: "User already updated",
+      });
+    } else {
+      // The user was successfully updated
+      res.status(200).json({
+        success: true,
+        order,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 
 // exports.postOrder = async (req, res, next) => {
 //   try {
@@ -266,63 +326,6 @@ exports.sellersLimitDeccress = async (req, res, next) => {
     res.send({ success: false, message: "All Limit Allready Reduce" });
   }
   console.log(sellersLimmit);
-};
-
-// payment router
-exports.paymentHendler = async (req, res, next) => {
-  try {
-    const {
-      orderItems,
-      shippingInfo,
-      paidPrice,
-      emails,
-    } = req.body;
-    const { id } = orderItems[0] || {};
-
-    const { name, email, address, country } = shippingInfo;
-
-    const order = await Payment.create({
-      productId: id,
-      name,
-      email,
-      address,
-      country,
-      paidPrice,
-    });
-
-    const makeAdmin = await User.updateOne(
-      { email: emails },
-      {
-        $set: { status: "PAID" },
-      }
-    );
-
-    if (makeAdmin.n === 0) {
-      // No matching user was found
-      res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    } else if (makeAdmin.nModified === 0) {
-      // The user has already been updated
-      res.status(400).json({
-        success: false,
-        message: "User already updated",
-      });
-    } else {
-      // The user was successfully updated
-      res.status(200).json({
-        success: true,
-        order,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
 };
 
 
