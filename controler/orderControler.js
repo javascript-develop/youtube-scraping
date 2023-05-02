@@ -34,18 +34,11 @@ res.setHeader('Content-Type', 'application/json')
 
 // payment router
 exports.paymentHendler = async (req, res, next) => {
-
-  res.setHeader('Content-Type', 'application/json')
-  try {
-    const {
-      orderItems,
-      shippingInfo,
-      paidPrice,
-      emails,
-    } = req.body;
+  res.setHeader('Content-Type', 'application/json');
+try {
+    const { orderItems = [], shippingInfo, paidPrice, emails } = req.body;
     const { id } = orderItems[0] || {};
-
-    const { name, email, address, country } = shippingInfo;
+    const { name, email, address, country } = shippingInfo || {};
 
     const order = await Payment.create({
       productId: id,
@@ -61,22 +54,17 @@ exports.paymentHendler = async (req, res, next) => {
       {
         $set: { status: "PAID" },
       }
-    );
-
-    if (makeAdmin.n === 0) {
-      // No matching user was found
+    );if (makeAdmin.n === 0) {
       res.status(404).json({
         success: false,
-        message: "User not found",
-      });
-    } else if (makeAdmin.nModified === 0) {
-      // The user has already been updated
+        message: "User not found",});}
+        
+else if (makeAdmin.nModified === 0) {
       res.status(400).json({
         success: false,
         message: "User already updated",
       });
     } else {
-      // The user was successfully updated
       res.status(200).json({
         success: true,
         order,
@@ -91,24 +79,55 @@ exports.paymentHendler = async (req, res, next) => {
   }
 };
 
+// exports.paymentHendler = async (req, res, next) => {
 
-// exports.postOrder = async (req, res, next) => {
+//   res.setHeader('Content-Type', 'application/json')
 //   try {
-//     const { shippingInfo, orderItems } = req.body;
-//     const { quantity, id } = orderItems;
-//     const { name, email } = shippingInfo;
+//     const {
+//       orderItems,
+//       shippingInfo,
+//       paidPrice,
+//       emails,
+//     } = req.body;
+//     const { id } = orderItems[0] || {};
 
-//     const order = await OrderDB.create({
+//     const { name, email, address, country } = shippingInfo;
+
+//     const order = await Payment.create({
 //       productId: id,
 //       name,
 //       email,
-//       limit: quantity,
+//       address,
+//       country,
+//       paidPrice,
 //     });
 
-//     res.status(200).json({
-//       success: true,
-//       order: order.toObject(),
-//     });
+//     const makeAdmin = await User.updateOne(
+//       { email: emails },
+//       {
+//         $set: { status: "PAID" },
+//       }
+//     );
+
+//     if (makeAdmin.n === 0) {
+//       // No matching user was found
+//       res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     } else if (makeAdmin.nModified === 0) {
+//       // The user has already been updated
+//       res.status(400).json({
+//         success: false,
+//         message: "User already updated",
+//       });
+//     } else {
+//       // The user was successfully updated
+//       res.status(200).json({
+//         success: true,
+//         order,
+//       });
+//     }
 //   } catch (error) {
 //     console.log(error);
 //     res.status(500).json({
