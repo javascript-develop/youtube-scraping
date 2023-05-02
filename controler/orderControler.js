@@ -33,7 +33,7 @@ exports.newOrder = async (req, res, next) => {
 
 
 // payment router
-exports.paymentHandler = async (req, res, next) => {
+exports.paymentHendler = async (req, res, next) => {
 
   res.setHeader('Content-Type', 'application/json')
   try {
@@ -43,8 +43,8 @@ exports.paymentHandler = async (req, res, next) => {
       paidPrice,
       emails,
     } = req.body;
+    const { id } = orderItems[0] || {};
 
-    const id = orderItems?.[0]?.id;
     const { name, email, address, country } = shippingInfo || {};
 
     const order = await Payment.create({
@@ -90,7 +90,6 @@ exports.paymentHandler = async (req, res, next) => {
     });
   }
 };
-
 
 // exports.postOrder = async (req, res, next) => {
 //   try {
