@@ -4,17 +4,11 @@ const CourseDB = require("../modal/coursesModal");
 const User = require("../modal/userModal");
 
 exports.newOrder = async (req, res, next) => {
+  res.setHeader('Content-Type', 'application/json')
   try {
     const { shippingInfo, orderItems } = req.body;
-    if (!orderItems || orderItems.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Order items are required",
-      });
-    }
-
-    const { quantity, id } = orderItems[0];
     const { name, email } = shippingInfo;
+    const { quantity, id } = orderItems || {}; // make orderItems optional
 
     const order = await OrderDB.create({
       productId: id,
@@ -36,6 +30,7 @@ exports.newOrder = async (req, res, next) => {
     });
   }
 };
+
 
 // payment router
 exports.paymentHendler = async (req, res, next) => {
