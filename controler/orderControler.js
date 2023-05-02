@@ -43,7 +43,7 @@ exports.paymentHendler = async (req, res, next) => {
       paidPrice,
       emails,
     } = req.body;
-    const { id } = orderItems[0] || {};
+    const { id } = orderItems.length > 0 ? orderItems[0] : {};
 
     const { name, email, address, country } = shippingInfo || {};
 
