@@ -30,13 +30,12 @@ exports.newOrder = async (req, res, next) => {
 
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    res.status(5000).json({
       success: false,
       message: error.message,
     });
   }
 };
-
 
 // payment router
 exports.paymentHendler = async (req, res, next) => {
