@@ -43,7 +43,14 @@ exports.paymentHendler = async (req, res, next) => {
       paidPrice,
       emails,
     } = req.body;
-    const { id } = orderItems.length > 0 ? orderItems[0] : {};
+    if (!Array.isArray(orderItems) || orderItems.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Order items are missing or invalid",
+      });
+    }
+
+    const { id } = orderItems[0];
 
     const { name, email, address, country } = shippingInfo || {};
 
