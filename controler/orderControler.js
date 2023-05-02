@@ -4,11 +4,16 @@ const CourseDB = require("../modal/coursesModal");
 const User = require("../modal/userModal");
 
 exports.newOrder = async (req, res, next) => {
-  
-res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Content-Type', 'application/json')
+
   try {
     const { shippingInfo, orderItems } = req.body;
-    const { quantity, id } = orderItems;
+
+    if (!orderItems || orderItems.length === 0) {
+      throw new Error("Order items are required");
+    }
+
+    const { quantity, id } = orderItems[0];
     const { name, email } = shippingInfo;
 
     const order = await OrderDB.create({
