@@ -7,14 +7,8 @@ exports.newOrder = async (req, res, next) => {
   res.setHeader('Content-Type', 'application/json')
   try {
     const { shippingInfo, orderItems } = req.body;
-    if (!shippingInfo.name || !shippingInfo.email) {
-      throw new Error('Name and email fields are required');
-    }
-    if (!orderItems || orderItems.length === 0) {
-      throw new Error('Order items are required');
-    }
-    const { quantity, id } = orderItems;
-    const { name, email } = shippingInfo;
+    const { name, email } = shippingInfo || {};
+    const { quantity, id } = orderItems || {}; // make orderItems optional
 
     const order = await OrderDB.create({
       productId: id,
@@ -27,6 +21,7 @@ exports.newOrder = async (req, res, next) => {
       success: true,
       order,
     });
+
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -50,7 +45,7 @@ exports.paymentHendler = async (req, res, next) => {
     } = req.body;
     const { id } = orderItems[0] || {};
 
-    const { name, email, address, country } = shippingInfo;
+    const { name, email, address, country } = shippingInfo || {};
 
     const order = await Payment.create({
       productId: id,
