@@ -34,6 +34,7 @@ exports.newOrder = async (req, res, next) => {
 
 // payment router
 exports.paymentHendler = async (req, res, next) => {
+
   res.setHeader('Content-Type', 'application/json')
   try {
     const {
@@ -42,7 +43,7 @@ exports.paymentHendler = async (req, res, next) => {
       paidPrice,
       emails,
     } = req.body;
-    const { id } = orderItems.length > 0 ? orderItems[0] : {};
+    const { id } = orderItems[0] || {};
 
     const { name, email, address, country } = shippingInfo || {};
 
@@ -89,6 +90,7 @@ exports.paymentHendler = async (req, res, next) => {
     });
   }
 };
+
 
 // exports.postOrder = async (req, res, next) => {
 //   try {
