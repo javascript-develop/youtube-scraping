@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const orderShema = new mongoose.Schema({productId: {
             type: mongoose.Schema.ObjectId,
             ref: "Courses",
-            required: true,
+            // required: true,
           },
           name: {
               type: String ,
