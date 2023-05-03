@@ -34,8 +34,7 @@ exports.newOrder = async (req, res, next) => {
 
 // payment router
 exports.paymentHendler = async (req, res, next) => {
-
-  res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Content-Type', 'application/json');
   try {
     const {
       orderItems,
@@ -43,7 +42,12 @@ exports.paymentHendler = async (req, res, next) => {
       paidPrice,
       emails,
     } = req.body;
-    const { id } = orderItems[0] || {};
+
+    if (!orderItems || orderItems.length === 0) {
+      throw new Error('Order items are missing or invalid');
+    }
+
+    const { id } = orderItems[0];
 
     const { name, email, address, country } = shippingInfo || {};
 
@@ -90,6 +94,7 @@ exports.paymentHendler = async (req, res, next) => {
     });
   }
 };
+
 
 
 // exports.postOrder = async (req, res, next) => {
