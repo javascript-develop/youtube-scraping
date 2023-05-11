@@ -7,11 +7,11 @@ const orderShema = new mongoose.Schema({productId: {
           },
           name: {
               type: String ,
-              // required: true,
+              required: true,
             },
           email: {
               type: String ,
-              // required: true,
+              required: true,
             },
             limit: {
               type: Number,
