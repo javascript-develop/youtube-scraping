@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 
 app.use(
   cors({
-    origin: "https://golf-b0226.web.app",
+    origin: "https://michigansbestgolfdeals.web.app",
   })
 );
 app.use(cors());
