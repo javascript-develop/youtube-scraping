@@ -74,13 +74,13 @@ app.post('/start-transcription', async (req, res) => {
 });
 
 
-app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
+app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
   const transcriptionId = req.params.transcriptionId;
 
   if (!transcriptionId) {
     return res.status(400).json({ error: 'Transcription ID is required' });
   }
-
+  check-transcription-status
   try {
     const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
 
