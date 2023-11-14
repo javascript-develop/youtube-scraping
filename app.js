@@ -1,6 +1,6 @@
 const express =require("express");
 const app = express();
-const cors = require('cors');
+const cors = require("cors");
 const bodyParser = require('body-parser');
 const axios = require('axios');
 require('dotenv').config();
@@ -10,13 +10,22 @@ app.use(
     origin: "https://my-web-48f68.web.app",
   })
 );
+app.use(cors());
+// const cookieParser = require('cookie-parser')....
+const fileUpload = require("express-fileupload");
+// app.use(cookieParser())
 app.use(express.json());
+
+// Use body-parser middleware to parse request bodies
 app.use(bodyParser.json());
+
+app.use(fileUpload());
 app.use(express.static("public"));
 
 
 
 const ytdl = require('ytdl-core');
+require('dotenv').config(); // Load environment variables
 
 const YOUR_API_TOKEN = process.env.AUDIO_PROCESSOR_KEY;
 const transcriptEndpoint = 'https://api.assemblyai.com/v2/transcript';
@@ -27,10 +36,7 @@ const headers = {
 };
 
 // Start transcription process
-app.post('/api/start-transcription', async (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://my-web-48f68.web.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+app.post('/start-transcription', async (req, res) => {
   const videoURL = req.body.videoURL;
 
   if (!videoURL) {
@@ -68,7 +74,7 @@ app.post('/api/start-transcription', async (req, res) => {
 });
 
 
-app.get('/api/check-transcription-status/:transcriptionId', async (req, res) => {
+app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
   const transcriptionId = req.params.transcriptionId;
 
   if (!transcriptionId) {
@@ -162,7 +168,7 @@ const analyzeText = async (transcriptionResult) => {
 };
 
 const extractFoodNames = (text) => {
-  const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|tea|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|chocolate|pasta|pizza|french fries|green tea|jam|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|pepper|herbs|basil|oregano)\b/gi;
+  const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|tea|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|chocolate|pasta|pizza|french fries|green tea|jam|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|salt|pepper|herbs|basil|oregano)\b/gi;
   const matches = text.match(foodNameRegex) || [];
   const foodNames = [...new Set(matches.map(name => name.toLowerCase()))];
   console.log('Final Food Names:', foodNames);
