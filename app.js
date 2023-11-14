@@ -87,7 +87,7 @@ app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
 
     // Poll until the transcription is completed or failed
     while (true) {
-      const pollingResponse = await axios.get(pollingEndpoint, { headers, timeout: 10000 });
+      const pollingResponse = await axios.get(pollingEndpoint, { headers, timeout: 100000 });
       transcriptionResult = pollingResponse.data;
 
       if (transcriptionResult.status === 'completed' || transcriptionResult.status === 'failed') {
