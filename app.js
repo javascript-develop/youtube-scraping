@@ -27,7 +27,7 @@ const headers = {
 };
 
 // Start transcription process
-app.post('/start-transcription', async (req, res) => {
+app.post('/api/start-transcription', async (req, res) => {
   res.header('Access-Control-Allow-Origin', 'https://my-web-48f68.web.app');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -68,7 +68,7 @@ app.post('/start-transcription', async (req, res) => {
 });
 
 
-app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
+app.get('/api/check-transcription-status/:transcriptionId', async (req, res) => {
   const transcriptionId = req.params.transcriptionId;
 
   if (!transcriptionId) {
