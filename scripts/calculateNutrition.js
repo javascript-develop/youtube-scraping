@@ -114,17 +114,3 @@
 // app.listen(port, () => {
 //   console.log(`Server is running on port ${port}`);
 // });
-// {
-//     "builds": [
-//           {
-//                 "src": "index.js",
-//                 "use": "@vercel/node"
-//           }
-//     ],
-//     "routes": [
-//           {
-//                 "src": "/(.*)",
-//                 "dest": "index.js"
-//           }
-//     ]
-// }

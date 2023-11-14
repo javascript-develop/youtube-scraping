@@ -1,23 +1,14 @@
 {
       "builds": [
-        {
-          "src": "index.js",
-          "use": "@vercel/node"
-        }
+            {
+                  "src": "index.js",
+                  "use": "@vercel/node"
+            }
       ],
       "routes": [
-        {
-          "src": "/check-transcription-status/:transcriptionId",
-          "dest": "index.js",
-          "headers": {
-            "Access-Control-Allow-Origin": "https://my-web-48f68.web.app",
-            "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-          }
-        },
-        {
-          "src": "/(.*)",
-          "dest": "index.js"
-        }
+            {
+                  "src": "/(.*)",
+                  "dest": "index.js"
+            }
       ]
-    }
-    
+}
