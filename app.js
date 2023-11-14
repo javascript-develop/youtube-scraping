@@ -7,7 +7,7 @@ require('dotenv').config();
 
 app.use(
   cors({
-    origin: "https://my-web-48f68.web.app",
+    origin: "http://localhost:3000",
   })
 );
 // const cookieParser = require('cookie-parser')....
@@ -70,8 +70,8 @@ app.post('/start-transcription', async (req, res) => {
 });
 
 
-app.get('/check-transcription-status', async (req, res) => {
-  const { transcriptionId } = req.query;
+app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
+  const transcriptionId = req.params.transcriptionId;
 
   if (!transcriptionId) {
     return res.status(400).json({ error: 'Transcription ID is required' });
