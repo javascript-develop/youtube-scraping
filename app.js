@@ -68,7 +68,7 @@ app.post('/start-transcription', async (req, res) => {
 });
 
 
-app.get(`/check-transcription-status/${transcriptionId}`, async (req, res) => {
+app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
   const transcriptionId = req.params.transcriptionId;
 
   if (!transcriptionId) {
