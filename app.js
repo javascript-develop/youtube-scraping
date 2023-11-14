@@ -1,6 +1,10 @@
 const express =require("express");
 const app = express();
-const cors = require("cors");
+const cors = require('cors');
+app.use(cors({
+  origin: "https://my-web-48f68.web.app",
+}));
+
 const bodyParser = require('body-parser');
 const axios = require('axios');
 require('dotenv').config();
@@ -33,6 +37,9 @@ const headers = {
 
 // Start transcription process
 app.post('/start-transcription', async (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://my-web-48f68.web.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
   const videoURL = req.body.videoURL;
 
   if (!videoURL) {
