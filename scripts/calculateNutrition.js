@@ -1,17 +1,25 @@
 // const express =require("express");
 // const app = express();
-// const cors = require('cors');
+// const cors = require("cors");
 // const bodyParser = require('body-parser');
 // const axios = require('axios');
 // require('dotenv').config();
 
-// app.use(cors({
-//   origin: "https://my-web-48f68.web.app",
-// }));
-
-
+// app.use(
+//   cors({
+//     origin: "https://my-web-48f68.web.app",
+//   })
+// );
+// app.use(cors());
+// // const cookieParser = require('cookie-parser')....
+// const fileUpload = require("express-fileupload");
+// // app.use(cookieParser())
 // app.use(express.json());
+
+// // Use body-parser middleware to parse request bodies
 // app.use(bodyParser.json());
+
+// app.use(fileUpload());
 // app.use(express.static("public"));
 
 
@@ -29,9 +37,6 @@
 
 // // Start transcription process
 // app.post('/start-transcription', async (req, res) => {
-//   res.header('Access-Control-Allow-Origin', 'https://my-web-48f68.web.app');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type');
 //   const videoURL = req.body.videoURL;
 
 //   if (!videoURL) {
@@ -69,37 +74,6 @@
 // });
 
 
-// app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
-//   res.header('Access-Control-Allow-Origin', 'https://my-web-48f68.web.app');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type');
-//   const transcriptionId = req.params.transcriptionId;
-
-//   if (!transcriptionId) {
-//     return res.status(400).json({ error: 'Transcription ID is required' });
-//   }
-
-//   try {
-//     const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
-
-//     while (true) {
-//       const pollingResponse = await axios.get(pollingEndpoint, { headers });
-//       const transcriptionResult = pollingResponse.data;
-
-//       if (transcriptionResult.status === 'completed') {
-//         const nutritionalData = await analyzeText(transcriptionResult);
-//         return res.json({ status: 'completed', result: transcriptionResult.text, nutritionalData });
-//       } else if (transcriptionResult.status === 'failed') {
-//         return res.json({ status: 'failed' });
-//       }
-
-//       await new Promise((resolve) => setTimeout(resolve, 3000));
-//     }
-//   } catch (error) {
-//     res.status(500).json({ error: 'An error occurred' });
-//   }
-// });
-
 // app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
 //   const transcriptionId = req.params.transcriptionId;
 
@@ -108,34 +82,31 @@
 //   }
 
 //   try {
-//     // Call the Nutritionix API to get nutritional data based on transcriptionId
-//     const transcriptionResult = await getTranscriptionResult(transcriptionId);
-//     const nutritionalData = await analyzeText(transcriptionResult);
+//     const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
+//     let transcriptionResult;
 
-//     // Send the nutritional data as the response
-//     res.json({ nutritionalData });
+//     // Poll until the transcription is completed or failed
+//     while (true) {
+//       const pollingResponse = await axios.get(pollingEndpoint, { headers });
+//       transcriptionResult = pollingResponse.data;
+
+//       if (transcriptionResult.status === 'completed' || transcriptionResult.status === 'failed') {
+//         break;
+//       }
+
+//       await new Promise((resolve) => setTimeout(resolve, 3000));
+//     }
+
+//     if (transcriptionResult.status === 'completed') {
+//       const nutritionalData = await analyzeText(transcriptionResult);
+//       return res.json({ status: 'completed', result: transcriptionResult.text, nutritionalData });
+//     } else {
+//       return res.json({ status: 'failed' });
+//     }
 //   } catch (error) {
-//     // Handle errors
 //     res.status(500).json({ error: 'An error occurred' });
 //   }
 // });
-
-// const getTranscriptionResult = async (transcriptionId) => {
-//   const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
-
-//   while (true) {
-//     const pollingResponse = await axios.get(pollingEndpoint, { headers });
-//     const transcriptionResult = pollingResponse.data;
-
-//     if (transcriptionResult.status === 'completed') {
-//       return transcriptionResult;
-//     } else if (transcriptionResult.status === 'failed') {
-//       throw new Error('Transcription process failed');
-//     }
-
-//     await new Promise((resolve) => setTimeout(resolve, 3000));
-//   }
-// };
 
 // const analyzeText = async (transcriptionResult) => {
 //   const { words } = transcriptionResult;
@@ -166,7 +137,7 @@
 // };
 
 // const extractFoodNames = (text) => {
-//   const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|tea|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|chocolate|pasta|pizza|french fries|green tea|jam|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|pepper|herbs|basil|oregano)\b/gi;
+//   const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|tea|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|chocolate|pasta|pizza|french fries|green tea|jam|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|salt|pepper|herbs|basil|oregano)\b/gi;
 //   const matches = text.match(foodNameRegex) || [];
 //   const foodNames = [...new Set(matches.map(name => name.toLowerCase()))];
 //   console.log('Final Food Names:', foodNames);

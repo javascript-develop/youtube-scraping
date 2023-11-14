@@ -87,7 +87,7 @@ app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
 
     // Poll until the transcription is completed or failed
     while (true) {
-      const pollingResponse = await axios.get(pollingEndpoint, { headers });
+      const pollingResponse = await axios.get(pollingEndpoint, { headers, timeout: 10000 });
       transcriptionResult = pollingResponse.data;
 
       if (transcriptionResult.status === 'completed' || transcriptionResult.status === 'failed') {
@@ -107,6 +107,8 @@ app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
+
 
 const analyzeText = async (transcriptionResult) => {
   const { words } = transcriptionResult;
