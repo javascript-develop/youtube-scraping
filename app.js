@@ -5,11 +5,11 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 require('dotenv').config();
 
-app.use(
-  cors({
-    origin: "https://my-web-48f68.web.app",
-  })
-);
+app.use(cors({
+  origin: "https://my-web-48f68.web.app",
+}));
+
+
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.static("public"));
