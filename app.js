@@ -7,16 +7,12 @@ require('dotenv').config();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://my-web-48f68.web.app",
   })
 );
-app.use(cors());
 // const cookieParser = require('cookie-parser')....
 const fileUpload = require("express-fileupload");
-// app.use(cookieParser())
 app.use(express.json());
-
-// Use body-parser middleware to parse request bodies
 app.use(bodyParser.json());
 
 app.use(fileUpload());
