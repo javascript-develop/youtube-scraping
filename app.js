@@ -1,10 +1,6 @@
 const express =require("express");
 const app = express();
 const cors = require('cors');
-app.use(cors({
-  origin: "https://my-web-48f68.web.app",
-}));
-
 const bodyParser = require('body-parser');
 const axios = require('axios');
 require('dotenv').config();
@@ -14,12 +10,8 @@ app.use(
     origin: "https://my-web-48f68.web.app",
   })
 );
-// const cookieParser = require('cookie-parser')....
-const fileUpload = require("express-fileupload");
 app.use(express.json());
 app.use(bodyParser.json());
-
-app.use(fileUpload());
 app.use(express.static("public"));
 
 
