@@ -80,63 +80,33 @@ app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
   if (!transcriptionId) {
     return res.status(400).json({ error: 'Transcription ID is required' });
   }
+
   try {
     const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
+    let transcriptionResult;
 
+    // Poll until the transcription is completed or failed
     while (true) {
       const pollingResponse = await axios.get(pollingEndpoint, { headers });
-      const transcriptionResult = pollingResponse.data;
+      transcriptionResult = pollingResponse.data;
 
-      if (transcriptionResult.status === 'completed') {
-        const nutritionalData = await analyzeText(transcriptionResult);
-        return res.json({ status: 'completed', result: transcriptionResult.text, nutritionalData });
-      } else if (transcriptionResult.status === 'failed') {
-        return res.json({ status: 'failed' });
+      if (transcriptionResult.status === 'completed' || transcriptionResult.status === 'failed') {
+        break;
       }
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
     }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred' });
-  }
-});
-
-app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
-  const transcriptionId = req.params.transcriptionId;
-
-  if (!transcriptionId) {
-    return res.status(400).json({ error: 'Transcription ID is required' });
-  }
-
-  try {
-    // Call the Nutritionix API to get nutritional data based on transcriptionId
-    const transcriptionResult = await getTranscriptionResult(transcriptionId);
-    const nutritionalData = await analyzeText(transcriptionResult);
-
-    // Send the nutritional data as the response
-    res.json({ nutritionalData });
-  } catch (error) {
-    // Handle errors
-    res.status(500).json({ error: 'An error occurred' });
-  }
-});
-
-const getTranscriptionResult = async (transcriptionId) => {
-  const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
-
-  while (true) {
-    const pollingResponse = await axios.get(pollingEndpoint, { headers });
-    const transcriptionResult = pollingResponse.data;
 
     if (transcriptionResult.status === 'completed') {
-      return transcriptionResult;
-    } else if (transcriptionResult.status === 'failed') {
-      throw new Error('Transcription process failed');
+      const nutritionalData = await analyzeText(transcriptionResult);
+      return res.json({ status: 'completed', result: transcriptionResult.text, nutritionalData });
+    } else {
+      return res.json({ status: 'failed' });
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
   }
-};
+});
 
 const analyzeText = async (transcriptionResult) => {
   const { words } = transcriptionResult;
