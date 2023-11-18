@@ -7,7 +7,7 @@ require('dotenv').config();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://my-web-48f68.web.app",
   })
 );
 // const cookieParser = require('cookie-parser')....
