@@ -5,11 +5,12 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 require('dotenv').config();
 
-app.use(
-  cors({
-    origin: "https://my-web-48f68.web.app",
-  })
-);
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Allow requests from any origin
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 // const cookieParser = require('cookie-parser')....
 const fileUpload = require("express-fileupload");
 // app.use(cookieParser())
@@ -189,3 +190,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/", (req, res) => {
   res.send("hellw world");
 });
+
+app.use(errorHandeler);
+
+module.exports = app;

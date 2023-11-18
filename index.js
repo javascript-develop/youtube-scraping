@@ -1,10 +1,11 @@
-const express = require('express');
-const app = express();
+const app = require('./app')
 
-// Define your routes, middleware, etc.
+require('dotenv').config()
+const port = process.env.PORT || 5000
 
-const port = process.env.PORT || 5000;
+// server configuratio
 
+// Start the server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+  console.log("server is run start", port)
+})
