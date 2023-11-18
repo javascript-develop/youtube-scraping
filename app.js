@@ -3,13 +3,13 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require('body-parser');
 const axios = require('axios');
+require('dotenv').config();
 
 app.use(
   cors({
     origin: "https://my-web-48f68.web.app",
   })
 );
-app.use(cors());
 // const cookieParser = require('cookie-parser')....
 const fileUpload = require("express-fileupload");
 // app.use(cookieParser())
@@ -72,6 +72,7 @@ app.post('/start-transcription', async (req, res) => {
   }
 });
 
+
 app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
   const transcriptionId = req.params.transcriptionId;
 
@@ -81,24 +82,32 @@ app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
 
   try {
     const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
+    let transcriptionResult;
 
+    // Poll until the transcription is completed or failed
     while (true) {
-      const pollingResponse = await axios.get(pollingEndpoint, { headers });
-      const transcriptionResult = pollingResponse.data;
+      const pollingResponse = await axios.get(pollingEndpoint, { headers, timeout: 100000 });
+      transcriptionResult = pollingResponse.data;
 
-      if (transcriptionResult.status === 'completed') {
-        const nutritionalData = await analyzeText(transcriptionResult);
-        return res.json({ status: 'completed', result: transcriptionResult.text, nutritionalData });
-      } else if (transcriptionResult.status === 'failed') {
-        return res.json({ status: 'failed' });
+      if (transcriptionResult.status === 'completed' || transcriptionResult.status === 'failed') {
+        break;
       }
 
       await new Promise((resolve) => setTimeout(resolve, 3000));
+    }
+
+    if (transcriptionResult.status === 'completed') {
+      const nutritionalData = await analyzeText(transcriptionResult);
+      return res.json({ status: 'completed', result: transcriptionResult.text, nutritionalData });
+    } else {
+      return res.json({ status: 'failed' });
     }
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
+
+
 
 const analyzeText = async (transcriptionResult) => {
   const { words } = transcriptionResult;
@@ -110,37 +119,28 @@ const analyzeText = async (transcriptionResult) => {
     return { status: 'No food entities found' };
   }
 
-  const nutritionalData = {
-    calories: 0,
-    protein: 0,
-    carbohydrates: 0,
-    fat: 0,
-  };
-
   const nutritionalDataPromises = foodNames.map(foodName => fetchNutritionalData(foodName, appId, appKey));
 
-  await Promise.all(nutritionalDataPromises)
-  .then(nutritionalDataArray => {
-    const combinedNutritionalData = nutritionalDataArray.filter(data => data !== null).map(data => ({
-      foodNames: data.foodName,  // Use 'foodName' here, not 'foodNames'
+  const nutritionalDataArray = await Promise.all(nutritionalDataPromises);
+
+  const combinedNutritionalData = nutritionalDataArray.reduce((result, data) => {
+    result[data.foodName] = {
       calories: data.calories,
       protein: data.protein,
       carbohydrates: data.carbohydrates,
       fat: data.fat,
-    }));
+    };
+    return result;
+  }, {});
 
-    console.log('Combined Nutritional Data:', combinedNutritionalData);
-  })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  return nutritionalData;
+  console.log('Combined Nutritional Data:', combinedNutritionalData);
+  return combinedNutritionalData;
 };
 
 const extractFoodNames = (text) => {
-  const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|vegetables|chocolate|pasta|pizza|french fries|coffee|tea|green tea|jam|butter|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|salt|pepper|herbs|basil|oregano)\b/gi;
+  const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|tea|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|chocolate|pasta|pizza|french fries|green tea|jam|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|salt|pepper|herbs|basil|oregano)\b/gi;
   const matches = text.match(foodNameRegex) || [];
-  const foodNames = [...new Set(matches.map(name =>name.toLowerCase()))];
+  const foodNames = [...new Set(matches.map(name => name.toLowerCase()))];
   console.log('Final Food Names:', foodNames);
   return foodNames;
 };
@@ -182,7 +182,6 @@ const fetchNutritionalData = async (foodName, appId, appKey) => {
     };
   }
 };
-
 // all router
 const userRouter = require("./router/user");
 const errorHandeler = require("./utilities/errorHendeler");
@@ -190,7 +189,3 @@ app.use("/api/v1/user", userRouter);
 app.use("/", (req, res) => {
   res.send("hellw world");
 });
-
-app.use(errorHandeler);
-
-module.exports = app;
