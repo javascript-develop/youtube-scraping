@@ -22,22 +22,42 @@
 // app.use(fileUpload());
 // app.use(express.static("public"));
 
-
-
 // const ytdl = require('ytdl-core');
-// require('dotenv').config(); // Load environment variables
-
 // const YOUR_API_TOKEN = process.env.AUDIO_PROCESSOR_KEY;
-// const transcriptEndpoint = 'https://api.assemblyai.com/v2/transcript';
-
+// const transcriptEndpoint = 'https://api.assemblyai.com/v2/transcript'; // Replace with your actual endpoint
 // const headers = {
 //   Authorization: `Bearer ${YOUR_API_TOKEN}`,
 //   'Content-Type': 'application/json',
 // };
+// // const transcriptionVideo = async (transcriptionId) => {
+// //   if (!transcriptionId) {
+// //     return { error: 'Transcription ID is required' };
+// //   }
 
-// // Start transcription process
+// //   try {
+// //     const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
+
+// //     while (true) {
+// //       const pollingResponse = await axios.get(pollingEndpoint, { headers });
+// //       const transcriptionResult = pollingResponse.data;
+
+// //       if (transcriptionResult.status === 'completed') {
+// //         const nutritionalData = await analyzeText(transcriptionResult);
+// //         return { status: 'completed', result: transcriptionResult.text, nutritionalData };
+// //       } else if (transcriptionResult.status === 'failed') {
+// //         return { status: 'failed' };
+// //       }
+
+// //       await new Promise((resolve) => setTimeout(resolve, 3000));
+// //     }
+// //   } catch (error) {
+// //     return { error: 'An error occurred' };
+// //   }
+// // };
+
 // app.post('/start-transcription', async (req, res) => {
-//   const videoURL = req.body.videoURL;
+//   console.log('Received transcription request:', req.body);
+//   const { videoURL } = req.body;
 
 //   if (!videoURL) {
 //     return res.status(400).json({ error: 'Video URL is required' });
@@ -72,11 +92,9 @@
 //     res.status(500).json({ error: 'An error occurred' });
 //   }
 // });
-
-
 // app.get('/check-transcription-status/:transcriptionId', async (req, res) => {
 //   const transcriptionId = req.params.transcriptionId;
-
+//   console.log('Received /check-transcription-status transcription ID:', transcriptionId);
 //   if (!transcriptionId) {
 //     return res.status(400).json({ error: 'Transcription ID is required' });
 //   }
@@ -102,47 +120,35 @@
 //   }
 // });
 
-// app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
-//   const transcriptionId = req.params.transcriptionId;
+// // app.get('/get-nutritional-data/:transcriptionId', async (req, res) => {
+// //   const transcriptionId = req.params.transcriptionId;
+// //   console.log('Received /get-nutritional-data transcription ID:', transcriptionId);
 
-//   if (!transcriptionId) {
-//     return res.status(400).json({ error: 'Transcription ID is required' });
-//   }
+// //   if (!transcriptionId) {
+// //     return res.status(400).json({ error: 'Transcription ID is required' });
+// //   }
 
-//   try {
-//     // Call the Nutritionix API to get nutritional data based on transcriptionId
-//     const transcriptionResult = await getTranscriptionResult(transcriptionId);
-//     const nutritionalData = await analyzeText(transcriptionResult);
+// //   try {
+// //     // Call the Nutritionix API to get nutritional data based on transcriptionId
+// //     const transcriptionResult = await transcriptionVideo(transcriptionId);
+// //     const nutritionalData = await analyzeText(transcriptionResult);
 
-//     // Send the nutritional data as the response
-//     res.json({ nutritionalData });
-//   } catch (error) {
-//     // Handle errors
-//     res.status(500).json({ error: 'An error occurred' });
-//   }
-// });
+// //     // Send the nutritional data as the response
+// //     res.json({ nutritionalData });
+// //   } catch (error) {
+// //     console.error('Error in /get-nutritional-data:', error);
+// //     // Handle errors
+// //     res.status(500).json({ error: 'An error occurred' });
+// //   }
+// // });
 
-// const getTranscriptionResult = async (transcriptionId) => {
-//   const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptionId}`;
-
-//   while (true) {
-//     const pollingResponse = await axios.get(pollingEndpoint, { headers });
-//     const transcriptionResult = pollingResponse.data;
-
-//     if (transcriptionResult.status === 'completed') {
-//       return transcriptionResult;
-//     } else if (transcriptionResult.status === 'failed') {
-//       throw new Error('Transcription process failed');
-//     }
-
-//     await new Promise((resolve) => setTimeout(resolve, 3000));
-//   }
-// };
 
 // const analyzeText = async (transcriptionResult) => {
 //   const { words } = transcriptionResult;
 
 //   const foodNames = extractFoodNames(transcriptionResult.text);
+
+//   console.log('Extracted Food Names:', foodNames);
 
 //   if (foodNames.length === 0) {
 //     console.log('No food entities found in the text:', transcriptionResult.text);
@@ -151,7 +157,11 @@
 
 //   const nutritionalDataPromises = foodNames.map(foodName => fetchNutritionalData(foodName, appId, appKey));
 
+//   console.log('Nutritional Data Promises:', nutritionalDataPromises);
+
 //   const nutritionalDataArray = await Promise.all(nutritionalDataPromises);
+
+//   console.log('Nutritional Data Array:', nutritionalDataArray);
 
 //   const combinedNutritionalData = nutritionalDataArray.reduce((result, data) => {
 //     result[data.foodName] = {
@@ -167,13 +177,15 @@
 //   return combinedNutritionalData;
 // };
 
+
 // const extractFoodNames = (text) => {
-//   const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|tea|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|chocolate|pasta|pizza|french fries|green tea|jam|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|salt|pepper|herbs|basil|oregano)\b/gi;
+//   const foodNameRegex = /\b(?:bread|meatsoy|tomato sauce|sauce|yogurt|cheese|soda|sour cream|rice|chicken|roasted chicken|fruits|fruit salad|vegetables|chocolate|pasta|pizza|french fries|coffee|tea|green tea|jam|butter|margarine|peanut butter|fresh juice|honey|biscuits|cake|ice cream|fish|olive oil|omelet|cornflakes|donut|salmon|shrimp|lobster|steak|pancakes|waffles|bacon|sausage|eggs|lasagna|tacos|sushi|quinoa|avocado|smoothie|curry|spaghetti|tomatoes|onions|garlic|parmesan cheese|cream|salt|pepper|herbs|basil|oregano)\b/gi;
 //   const matches = text.match(foodNameRegex) || [];
-//   const foodNames = [...new Set(matches.map(name => name.toLowerCase()))];
+//   const foodNames = [...new Set(matches.map(name =>name.toLowerCase()))];
 //   console.log('Final Food Names:', foodNames);
 //   return foodNames;
 // };
+
 
 // const appId = process.env.NUTRITION_ID;
 // const appKey = process.env.NUTRITION_API_KEY;
